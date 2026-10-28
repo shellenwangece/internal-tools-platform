@@ -6,6 +6,8 @@ import { pathToFileURL } from 'node:url';
 import { createServer as createViteServer } from 'vite';
 import { registerAuditRoutes } from '../routes/audit.js';
 import { registerAuthRoutes } from '../routes/auth.js';
+import { registerDatasetRoutes } from '../routes/datasets.js';
+import { CsvConnector } from './data/csvConnector.js';
 import { createSessionMiddleware, requireUser } from './auth.js';
 import { loadConfig, type Config } from './config.js';
 import { openDb, type Db } from './db.js';
@@ -14,17 +16,21 @@ import { seedDemo } from './seed.js';
 export interface AppDependencies {
   db: Db;
   config: Config;
+  connector?: CsvConnector;
   devin?: unknown;
   github?: unknown;
   builder?: unknown;
 }
 
-export function createApp({ db, config }: AppDependencies): express.Express {
+export function createApp({ db, config, connector }: AppDependencies): express.Express {
   const app = express();
+  const data = connector ?? new CsvConnector(db, path.resolve('data'));
+  data.loadIfEmpty();
   app.use(express.json({ limit: '1mb' }));
   app.use(createSessionMiddleware(config));
   registerAuthRoutes(app, db);
   registerAuditRoutes(app, db);
+  registerDatasetRoutes(app, db, data);
   app.get('/api/me', requireUser(db), (req, res) => {
     const { id, name, role, team } = req.user!;
     res.json({ id, name, role, team });
