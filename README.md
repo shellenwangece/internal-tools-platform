@@ -61,7 +61,7 @@ Log in by picking a demo user on the start page:
 | Sam Okafor | App user | Support |
 | Lena Park | App user | Risk |
 
-1. **Catalog (Ava):** the three Power Apps apps appear as legacy entries, next to the Devin-built KYC Review Queue.
+1. **Catalog (Ava):** the Devin-built KYC Review Queue is live. Admins can also register existing tools under *Admin*.
 2. **Request (Priya):** *Request an app* → "Refunds Dashboard", describe it in plain language, audience Support, dataset Refunds (View or View and change) → *Send for approval*.
 3. **Gate 1 (Marco):** open the request → optionally narrow the data access → *Approve and start building*. The request links to the live Devin session and the new private repo.
 4. **Build:** Devin builds the app from the template and opens a PR (typically 15–40 min; cut this in the edit).

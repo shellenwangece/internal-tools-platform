@@ -49,15 +49,15 @@ describe('catalog and app requests', () => {
     expect((await marco.get(`/api/requests/${body.request.id}`)).status).toBe(200);
   });
 
-  it('catalog shows legacy apps to everyone and lets admins register external apps', async () => {
+  it('catalog starts empty and lets admins register external apps', async () => {
     const sam = await as('sam');
     const before = await sam.get('/api/apps');
-    expect(before.body.apps.map((a: { slug: string }) => a.slug)).toEqual(expect.arrayContaining(['legacy-kyc-review-queue', 'legacy-refunds-dashboard', 'legacy-feature-flag-admin']));
+    expect(before.body.apps).toEqual([]);
     expect((await sam.post('/api/admin/apps/external').send({})).status).toBe(403);
     const ava = await as('ava');
     const created = await ava.post('/api/admin/apps/external').send({ name: 'Payroll Portal', url: 'https://payroll.example.com', owner: 'Finance', teams: ['Engineering'] });
     expect(created.status).toBe(201);
     expect(created.body.app.slug).toBe('ext-payroll-portal');
-    expect((await sam.get('/api/apps')).body.apps).toHaveLength(4);
+    expect((await sam.get('/api/apps')).body.apps).toHaveLength(1);
   });
 });

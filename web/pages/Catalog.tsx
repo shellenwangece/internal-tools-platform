@@ -24,6 +24,7 @@ export function Catalog({ me }: { me: Me }) {
           </Link>
         ))}
       </div>
+      {external.length > 0 && <>
       <h2 className="section-title">Other registered apps</h2>
       <div className="grid">
         {external.map((a) => (
@@ -34,6 +35,7 @@ export function Catalog({ me }: { me: Me }) {
           </a>
         ))}
       </div>
+      </>}
     </div>
   );
 }
