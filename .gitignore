@@ -8,3 +8,5 @@ playwright-report/
 test-results/
 .devin-resources.json
 .superpowers/
+test-results/
+playwright-report/

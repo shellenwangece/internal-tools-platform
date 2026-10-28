@@ -31,19 +31,29 @@ export function registerPublishRoutes(app: Express, deps: PublishDeps): void {
 
   const serve = (dir: string) => express.static(dir, { index: 'index.html', fallthrough: false, setHeaders: (r) => { r.setHeader('Content-Security-Policy', BUNDLE_CSP); r.setHeader('X-Frame-Options', 'SAMEORIGIN'); r.setHeader('Cache-Control', 'no-store'); } });
 
-  app.use('/apps/:slug/live', requireUser(db), (req, res, next) => {
+  // A sandboxed iframe has an opaque origin, so the browser sends no session cookie for its
+  // script/style requests. Only the HTML document needs a login; static assets carry no data
+  // (all data goes through the SDK bridge) and are served with CORS so module scripts load.
+  const isDocument = (req: express.Request) => req.path === '/' || req.path === '/index.html';
+  const userForDocument: express.RequestHandler = (req, res, next) => {
+    if (isDocument(req)) { requireUser(db)(req, res, next); return; }
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    next();
+  };
+
+  app.use('/apps/:slug/live', userForDocument, (req, res, next) => {
     const a = getAppBySlug(db, req.params.slug);
     if (!a || a.kind !== 'built' || a.status !== 'live' || !a.liveSha) { res.status(404).send('App is not live'); return; }
-    if (req.user!.role !== 'admin' && !a.teams.includes(req.user!.team)) { res.status(403).send('No access'); return; }
+    if (isDocument(req) && req.user!.role !== 'admin' && !a.teams.includes(req.user!.team)) { res.status(403).send('No access'); return; }
     if (!deps.bundles.has(a.slug, a.liveSha)) { res.status(404).send('Bundle missing'); return; }
     serve(deps.bundles.dir(a.slug, a.liveSha))(req, res, next);
   });
 
-  app.use('/apps/:slug/preview/:requestId', requireUser(db), (req, res, next) => {
+  app.use('/apps/:slug/preview/:requestId', userForDocument, (req, res, next) => {
     let r; try { r = getRequest(db, Number(req.params.requestId)); } catch { res.status(404).send('Not found'); return; }
-    const u = req.user!;
     if (r.slug !== req.params.slug || r.status !== 'ready_for_review' || !r.previewSha) { res.status(404).send('No preview'); return; }
-    if ((u.role !== 'approver' && u.role !== 'admin') || r.requesterId === u.id) { res.status(403).send('No access'); return; }
+    const u = req.user;
+    if (isDocument(req) && (!u || (u.role !== 'approver' && u.role !== 'admin') || r.requesterId === u.id)) { res.status(403).send('No access'); return; }
     if (!deps.bundles.has(r.slug, r.previewSha)) { res.status(404).send('Bundle missing'); return; }
     serve(deps.bundles.dir(r.slug, r.previewSha))(req, res, next);
   });

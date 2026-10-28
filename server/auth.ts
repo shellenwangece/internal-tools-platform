@@ -27,7 +27,7 @@ export function createSessionMiddleware(config: Config): RequestHandler {
     keys: [config.SESSION_SECRET],
     httpOnly: true,
     sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.COOKIE_SECURE === '1',
     maxAge: 8 * 60 * 60 * 1000,
   });
 }

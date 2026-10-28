@@ -48,6 +48,10 @@ describe('preview, publish, unpublish', () => {
     expect(live.status).toBe(200);
     expect(live.text).toContain('bbbbbbb');
     expect((await (await as('lena')).get('/apps/refunds-dashboard/live/')).status).toBe(403);
+    expect((await request(app).get('/apps/refunds-dashboard/live/')).status).toBe(401);
+    const asset = await request(app).get('/apps/refunds-dashboard/live/app.js');
+    expect(asset.status).toBe(200);
+    expect(asset.headers['access-control-allow-origin']).toBe('*');
     expect((await sam.get('/apps/refunds-dashboard/live/../../etc/passwd')).status).not.toBe(200);
 
     const ava = await as('ava');

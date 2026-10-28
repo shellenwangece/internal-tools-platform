@@ -95,8 +95,8 @@ export async function startServer(): Promise<void> {
     app.get('*', (_req, res) => res.sendFile(path.resolve('dist/index.html')));
   }
 
-  const server = app.listen(3000, '0.0.0.0', () => {
-    process.stdout.write('Internal Tools Platform listening on http://localhost:3000\n');
+  const server = app.listen(Number(process.env.PORT ?? 3000), '0.0.0.0', () => {
+    process.stdout.write(`Internal Tools Platform listening on http://localhost:${process.env.PORT ?? 3000}\n`);
   });
   const shutdown = () => {
     server.close(() => {
