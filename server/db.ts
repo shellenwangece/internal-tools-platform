@@ -25,6 +25,7 @@ export function openDb(file: string): Db {
       teams_json TEXT NOT NULL DEFAULT '[]',
       repo TEXT,
       live_sha TEXT,
+      grants_json TEXT NOT NULL DEFAULT '[]',
       status TEXT NOT NULL DEFAULT 'external',
       created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     );

@@ -10,19 +10,19 @@ const users = [
 
 const externalApps = [
   {
-    slug: 'kyc-review-queue',
+    slug: 'legacy-kyc-review-queue',
     name: 'KYC Review Queue',
     description: 'Review pending customer identity cases.',
     teams: ['Compliance'],
   },
   {
-    slug: 'refunds-dashboard',
+    slug: 'legacy-refunds-dashboard',
     name: 'Refunds Dashboard',
     description: 'Review and track customer refunds.',
     teams: ['Support', 'Risk'],
   },
   {
-    slug: 'feature-flag-admin',
+    slug: 'legacy-feature-flag-admin',
     name: 'Feature Flag Admin',
     description: 'Manage feature rollout settings.',
     teams: ['Engineering'],
