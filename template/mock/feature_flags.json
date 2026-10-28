@@ -1,0 +1,227 @@
+[
+ {
+  "flag_key": "new_onboarding_flow",
+  "description": "Controls the new onboarding flow feature.",
+  "enabled": true,
+  "rollout_percent": 100,
+  "owner_team": "Engineering",
+  "updated_at": "2026-10-07T01:04:23.000Z",
+  "updated_by": "Lena Park"
+ },
+ {
+  "flag_key": "instant_refunds",
+  "description": "Controls the instant refunds feature.",
+  "enabled": true,
+  "rollout_percent": 50,
+  "owner_team": "Risk",
+  "updated_at": "2026-08-05T02:45:18.000Z",
+  "updated_by": "Lena Park"
+ },
+ {
+  "flag_key": "kyc_auto_approve_low_risk",
+  "description": "Controls the kyc auto approve low risk feature.",
+  "enabled": true,
+  "rollout_percent": 25,
+  "owner_team": "Compliance",
+  "updated_at": "2026-10-22T04:03:18.000Z",
+  "updated_by": "Marco Rossi"
+ },
+ {
+  "flag_key": "dark_mode",
+  "description": "Controls the dark mode feature.",
+  "enabled": false,
+  "rollout_percent": 5,
+  "owner_team": "Engineering",
+  "updated_at": "2026-08-19T01:15:48.000Z",
+  "updated_by": "Marco Rossi"
+ },
+ {
+  "flag_key": "card_controls_v2",
+  "description": "Controls the card controls v2 feature.",
+  "enabled": true,
+  "rollout_percent": 0,
+  "owner_team": "Engineering",
+  "updated_at": "2026-10-16T18:12:30.000Z",
+  "updated_by": "Marco Rossi"
+ },
+ {
+  "flag_key": "savings_pots",
+  "description": "Controls the savings pots feature.",
+  "enabled": false,
+  "rollout_percent": 50,
+  "owner_team": "Support",
+  "updated_at": "2026-07-20T03:06:59.000Z",
+  "updated_by": "Marco Rossi"
+ },
+ {
+  "flag_key": "fx_fee_waiver",
+  "description": "Controls the fx fee waiver feature.",
+  "enabled": false,
+  "rollout_percent": 10,
+  "owner_team": "Compliance",
+  "updated_at": "2026-09-27T17:35:26.000Z",
+  "updated_by": "Marco Rossi"
+ },
+ {
+  "flag_key": "merchant_insights",
+  "description": "Controls the merchant insights feature.",
+  "enabled": true,
+  "rollout_percent": 50,
+  "owner_team": "Risk",
+  "updated_at": "2026-07-27T22:43:36.000Z",
+  "updated_by": "Marco Rossi"
+ },
+ {
+  "flag_key": "open_banking_sync",
+  "description": "Controls the open banking sync feature.",
+  "enabled": false,
+  "rollout_percent": 5,
+  "owner_team": "Support",
+  "updated_at": "2026-09-14T10:16:44.000Z",
+  "updated_by": "Marco Rossi"
+ },
+ {
+  "flag_key": "biometric_login",
+  "description": "Controls the biometric login feature.",
+  "enabled": false,
+  "rollout_percent": 50,
+  "owner_team": "Compliance",
+  "updated_at": "2026-10-11T11:03:05.000Z",
+  "updated_by": "Ava Chen"
+ },
+ {
+  "flag_key": "bill_split",
+  "description": "Controls the bill split feature.",
+  "enabled": false,
+  "rollout_percent": 10,
+  "owner_team": "Engineering",
+  "updated_at": "2026-10-12T00:55:27.000Z",
+  "updated_by": "Lena Park"
+ },
+ {
+  "flag_key": "virtual_cards",
+  "description": "Controls the virtual cards feature.",
+  "enabled": false,
+  "rollout_percent": 100,
+  "owner_team": "Support",
+  "updated_at": "2026-09-22T00:32:09.000Z",
+  "updated_by": "Ava Chen"
+ },
+ {
+  "flag_key": "statement_export_v2",
+  "description": "Controls the statement export v2 feature.",
+  "enabled": false,
+  "rollout_percent": 5,
+  "owner_team": "Support",
+  "updated_at": "2026-09-17T08:08:33.000Z",
+  "updated_by": "Ava Chen"
+ },
+ {
+  "flag_key": "chat_support_beta",
+  "description": "Controls the chat support beta feature.",
+  "enabled": true,
+  "rollout_percent": 100,
+  "owner_team": "Support",
+  "updated_at": "2026-08-01T19:06:10.000Z",
+  "updated_by": "Marco Rossi"
+ },
+ {
+  "flag_key": "crypto_tab",
+  "description": "Controls the crypto tab feature.",
+  "enabled": true,
+  "rollout_percent": 0,
+  "owner_team": "Support",
+  "updated_at": "2026-10-02T20:45:41.000Z",
+  "updated_by": "Marco Rossi"
+ },
+ {
+  "flag_key": "spend_limits",
+  "description": "Controls the spend limits feature.",
+  "enabled": true,
+  "rollout_percent": 0,
+  "owner_team": "Compliance",
+  "updated_at": "2026-09-06T00:08:57.000Z",
+  "updated_by": "Ava Chen"
+ },
+ {
+  "flag_key": "push_receipts",
+  "description": "Controls the push receipts feature.",
+  "enabled": true,
+  "rollout_percent": 50,
+  "owner_team": "Support",
+  "updated_at": "2026-10-01T04:08:50.000Z",
+  "updated_by": "Ava Chen"
+ },
+ {
+  "flag_key": "referral_program",
+  "description": "Controls the referral program feature.",
+  "enabled": true,
+  "rollout_percent": 100,
+  "owner_team": "Risk",
+  "updated_at": "2026-09-07T08:44:52.000Z",
+  "updated_by": "Lena Park"
+ },
+ {
+  "flag_key": "joint_accounts",
+  "description": "Controls the joint accounts feature.",
+  "enabled": false,
+  "rollout_percent": 100,
+  "owner_team": "Compliance",
+  "updated_at": "2026-09-30T01:06:00.000Z",
+  "updated_by": "Marco Rossi"
+ },
+ {
+  "flag_key": "subscription_tracker",
+  "description": "Controls the subscription tracker feature.",
+  "enabled": true,
+  "rollout_percent": 50,
+  "owner_team": "Risk",
+  "updated_at": "2026-09-15T16:26:26.000Z",
+  "updated_by": "Marco Rossi"
+ },
+ {
+  "flag_key": "atm_locator",
+  "description": "Controls the atm locator feature.",
+  "enabled": true,
+  "rollout_percent": 50,
+  "owner_team": "Support",
+  "updated_at": "2026-07-02T12:25:56.000Z",
+  "updated_by": "Marco Rossi"
+ },
+ {
+  "flag_key": "travel_mode",
+  "description": "Controls the travel mode feature.",
+  "enabled": true,
+  "rollout_percent": 50,
+  "owner_team": "Support",
+  "updated_at": "2026-10-21T17:43:15.000Z",
+  "updated_by": "Marco Rossi"
+ },
+ {
+  "flag_key": "cashback_boost",
+  "description": "Controls the cashback boost feature.",
+  "enabled": true,
+  "rollout_percent": 100,
+  "owner_team": "Support",
+  "updated_at": "2026-08-15T04:55:20.000Z",
+  "updated_by": "Marco Rossi"
+ },
+ {
+  "flag_key": "budget_alerts",
+  "description": "Controls the budget alerts feature.",
+  "enabled": false,
+  "rollout_percent": 25,
+  "owner_team": "Risk",
+  "updated_at": "2026-07-03T08:11:19.000Z",
+  "updated_by": "Lena Park"
+ },
+ {
+  "flag_key": "tax_summary",
+  "description": "Controls the tax summary feature.",
+  "enabled": true,
+  "rollout_percent": 50,
+  "owner_team": "Support",
+  "updated_at": "2026-07-07T16:35:49.000Z",
+  "updated_by": "Ava Chen"
+ }
+]

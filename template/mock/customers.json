@@ -1,0 +1,322 @@
+[
+ {
+  "customer_id": "C-1001",
+  "name": "Nora Moreno",
+  "email": "nora.moreno0@example.com",
+  "country": "SG",
+  "segment": "enterprise",
+  "created_at": "2026-01-23T17:56:27.000Z"
+ },
+ {
+  "customer_id": "C-1002",
+  "name": "Zoe Larsen",
+  "email": "zoe.larsen1@example.com",
+  "country": "SG",
+  "segment": "smb",
+  "created_at": "2026-03-02T12:34:55.000Z"
+ },
+ {
+  "customer_id": "C-1003",
+  "name": "Theo Moreno",
+  "email": "theo.moreno2@example.com",
+  "country": "AU",
+  "segment": "smb",
+  "created_at": "2026-07-26T03:33:56.000Z"
+ },
+ {
+  "customer_id": "C-1004",
+  "name": "Liam Novak",
+  "email": "liam.novak3@example.com",
+  "country": "FR",
+  "segment": "smb",
+  "created_at": "2026-06-28T14:32:33.000Z"
+ },
+ {
+  "customer_id": "C-1005",
+  "name": "Sara Dubois",
+  "email": "sara.dubois4@example.com",
+  "country": "US",
+  "segment": "retail",
+  "created_at": "2025-03-27T02:34:58.000Z"
+ },
+ {
+  "customer_id": "C-1006",
+  "name": "Lina Walsh",
+  "email": "lina.walsh5@example.com",
+  "country": "DE",
+  "segment": "enterprise",
+  "created_at": "2024-08-07T21:57:39.000Z"
+ },
+ {
+  "customer_id": "C-1007",
+  "name": "Ruby Larsen",
+  "email": "ruby.larsen6@example.com",
+  "country": "SG",
+  "segment": "smb",
+  "created_at": "2025-05-25T05:39:02.000Z"
+ },
+ {
+  "customer_id": "C-1008",
+  "name": "Jonas Martin",
+  "email": "jonas.martin7@example.com",
+  "country": "FR",
+  "segment": "smb",
+  "created_at": "2026-01-21T11:34:40.000Z"
+ },
+ {
+  "customer_id": "C-1009",
+  "name": "Leo Dubois",
+  "email": "leo.dubois8@example.com",
+  "country": "BR",
+  "segment": "retail",
+  "created_at": "2026-06-08T22:54:28.000Z"
+ },
+ {
+  "customer_id": "C-1010",
+  "name": "Hugo Ibrahim",
+  "email": "hugo.ibrahim9@example.com",
+  "country": "DE",
+  "segment": "retail",
+  "created_at": "2025-02-15T00:51:38.000Z"
+ },
+ {
+  "customer_id": "C-1011",
+  "name": "Jonas Moreno",
+  "email": "jonas.moreno10@example.com",
+  "country": "US",
+  "segment": "enterprise",
+  "created_at": "2024-07-15T19:53:13.000Z"
+ },
+ {
+  "customer_id": "C-1012",
+  "name": "Ava Ibrahim",
+  "email": "ava.ibrahim11@example.com",
+  "country": "NL",
+  "segment": "retail",
+  "created_at": "2026-06-19T14:58:43.000Z"
+ },
+ {
+  "customer_id": "C-1013",
+  "name": "Liam Chen",
+  "email": "liam.chen12@example.com",
+  "country": "US",
+  "segment": "enterprise",
+  "created_at": "2026-04-20T18:50:20.000Z"
+ },
+ {
+  "customer_id": "C-1014",
+  "name": "Hugo Rossi",
+  "email": "hugo.rossi13@example.com",
+  "country": "GB",
+  "segment": "smb",
+  "created_at": "2025-02-10T10:55:25.000Z"
+ },
+ {
+  "customer_id": "C-1015",
+  "name": "Kai Dubois",
+  "email": "kai.dubois14@example.com",
+  "country": "IN",
+  "segment": "enterprise",
+  "created_at": "2026-05-12T21:51:40.000Z"
+ },
+ {
+  "customer_id": "C-1016",
+  "name": "Nora Haddad",
+  "email": "nora.haddad15@example.com",
+  "country": "FR",
+  "segment": "smb",
+  "created_at": "2026-07-08T23:34:01.000Z"
+ },
+ {
+  "customer_id": "C-1017",
+  "name": "Kai Haddad",
+  "email": "kai.haddad16@example.com",
+  "country": "GB",
+  "segment": "smb",
+  "created_at": "2025-06-17T14:48:34.000Z"
+ },
+ {
+  "customer_id": "C-1018",
+  "name": "Elif Novak",
+  "email": "elif.novak17@example.com",
+  "country": "GB",
+  "segment": "retail",
+  "created_at": "2024-11-05T03:08:46.000Z"
+ },
+ {
+  "customer_id": "C-1019",
+  "name": "Jonas Moreno",
+  "email": "jonas.moreno18@example.com",
+  "country": "GB",
+  "segment": "retail",
+  "created_at": "2025-03-11T11:59:40.000Z"
+ },
+ {
+  "customer_id": "C-1020",
+  "name": "Zoe Bauer",
+  "email": "zoe.bauer19@example.com",
+  "country": "DE",
+  "segment": "retail",
+  "created_at": "2024-11-19T08:27:11.000Z"
+ },
+ {
+  "customer_id": "C-1021",
+  "name": "Zoe Rossi",
+  "email": "zoe.rossi20@example.com",
+  "country": "GB",
+  "segment": "retail",
+  "created_at": "2024-09-11T11:38:24.000Z"
+ },
+ {
+  "customer_id": "C-1022",
+  "name": "Elif Silva",
+  "email": "elif.silva21@example.com",
+  "country": "BR",
+  "segment": "enterprise",
+  "created_at": "2026-07-29T21:10:03.000Z"
+ },
+ {
+  "customer_id": "C-1023",
+  "name": "Mei Novak",
+  "email": "mei.novak22@example.com",
+  "country": "BR",
+  "segment": "enterprise",
+  "created_at": "2025-11-30T09:52:10.000Z"
+ },
+ {
+  "customer_id": "C-1024",
+  "name": "Leo Walsh",
+  "email": "leo.walsh23@example.com",
+  "country": "FR",
+  "segment": "retail",
+  "created_at": "2026-09-07T23:40:59.000Z"
+ },
+ {
+  "customer_id": "C-1025",
+  "name": "Nora Okafor",
+  "email": "nora.okafor24@example.com",
+  "country": "SG",
+  "segment": "enterprise",
+  "created_at": "2026-03-17T16:31:48.000Z"
+ },
+ {
+  "customer_id": "C-1026",
+  "name": "Mia Haddad",
+  "email": "mia.haddad25@example.com",
+  "country": "US",
+  "segment": "smb",
+  "created_at": "2026-10-22T07:42:50.000Z"
+ },
+ {
+  "customer_id": "C-1027",
+  "name": "Leo Tanaka",
+  "email": "leo.tanaka26@example.com",
+  "country": "BR",
+  "segment": "retail",
+  "created_at": "2025-05-26T22:44:41.000Z"
+ },
+ {
+  "customer_id": "C-1028",
+  "name": "Isla Patel",
+  "email": "isla.patel27@example.com",
+  "country": "AU",
+  "segment": "retail",
+  "created_at": "2025-03-11T12:44:50.000Z"
+ },
+ {
+  "customer_id": "C-1029",
+  "name": "Nora Haddad",
+  "email": "nora.haddad28@example.com",
+  "country": "AU",
+  "segment": "smb",
+  "created_at": "2024-12-08T14:56:02.000Z"
+ },
+ {
+  "customer_id": "C-1030",
+  "name": "Noah Patel",
+  "email": "noah.patel29@example.com",
+  "country": "IN",
+  "segment": "enterprise",
+  "created_at": "2025-11-11T01:04:14.000Z"
+ },
+ {
+  "customer_id": "C-1031",
+  "name": "Mia Ibrahim",
+  "email": "mia.ibrahim30@example.com",
+  "country": "SG",
+  "segment": "retail",
+  "created_at": "2025-08-08T21:23:17.000Z"
+ },
+ {
+  "customer_id": "C-1032",
+  "name": "Ivan Chen",
+  "email": "ivan.chen31@example.com",
+  "country": "AU",
+  "segment": "retail",
+  "created_at": "2026-02-25T06:07:50.000Z"
+ },
+ {
+  "customer_id": "C-1033",
+  "name": "Mei Moreno",
+  "email": "mei.moreno32@example.com",
+  "country": "BR",
+  "segment": "smb",
+  "created_at": "2025-03-09T06:40:59.000Z"
+ },
+ {
+  "customer_id": "C-1034",
+  "name": "Noah Silva",
+  "email": "noah.silva33@example.com",
+  "country": "IN",
+  "segment": "smb",
+  "created_at": "2025-08-24T15:57:38.000Z"
+ },
+ {
+  "customer_id": "C-1035",
+  "name": "Nora Kim",
+  "email": "nora.kim34@example.com",
+  "country": "BR",
+  "segment": "retail",
+  "created_at": "2025-07-07T18:25:45.000Z"
+ },
+ {
+  "customer_id": "C-1036",
+  "name": "Noah Walsh",
+  "email": "noah.walsh35@example.com",
+  "country": "GB",
+  "segment": "retail",
+  "created_at": "2024-07-08T23:51:50.000Z"
+ },
+ {
+  "customer_id": "C-1037",
+  "name": "Leo Silva",
+  "email": "leo.silva36@example.com",
+  "country": "CA",
+  "segment": "smb",
+  "created_at": "2025-07-29T02:31:02.000Z"
+ },
+ {
+  "customer_id": "C-1038",
+  "name": "Ruby Bauer",
+  "email": "ruby.bauer37@example.com",
+  "country": "SG",
+  "segment": "enterprise",
+  "created_at": "2024-08-28T23:52:53.000Z"
+ },
+ {
+  "customer_id": "C-1039",
+  "name": "Ruby Rossi",
+  "email": "ruby.rossi38@example.com",
+  "country": "AU",
+  "segment": "smb",
+  "created_at": "2026-06-12T21:11:07.000Z"
+ },
+ {
+  "customer_id": "C-1040",
+  "name": "Elif Kim",
+  "email": "elif.kim39@example.com",
+  "country": "BR",
+  "segment": "retail",
+  "created_at": "2026-03-02T03:26:06.000Z"
+ }
+]
