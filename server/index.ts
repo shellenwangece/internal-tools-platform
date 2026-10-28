@@ -10,6 +10,9 @@ import { registerDatasetRoutes } from '../routes/datasets.js';
 import { registerCatalogRoutes } from '../routes/catalog.js';
 import { registerRequestRoutes } from '../routes/requests.js';
 import { registerRuntimeRoutes } from '../routes/runtime.js';
+import { registerApprovalRoutes } from '../routes/approvals.js';
+import { FakeDevinClient, HttpDevinClient, type DevinClient } from './devin/client.js';
+import { startPoller } from './devin/poller.js';
 import { CsvConnector } from './data/csvConnector.js';
 import { createSessionMiddleware, requireUser } from './auth.js';
 import { loadConfig, type Config } from './config.js';
@@ -20,15 +23,21 @@ export interface AppDependencies {
   db: Db;
   config: Config;
   connector?: CsvConnector;
-  devin?: unknown;
+  devin?: DevinClient;
   github?: unknown;
   builder?: unknown;
 }
 
-export function createApp({ db, config, connector }: AppDependencies): express.Express {
+export function makeDevinClient(config: Config): DevinClient {
+  if (config.DEVIN_MOCK === '1' || !config.DEVIN_API_KEY || !config.DEVIN_ORG_ID) return new FakeDevinClient();
+  return new HttpDevinClient(config.DEVIN_API_KEY, config.DEVIN_ORG_ID);
+}
+
+export function createApp({ db, config, connector, devin }: AppDependencies): express.Express {
   const app = express();
   const data = connector ?? new CsvConnector(db, path.resolve('data'));
   data.loadIfEmpty();
+  const devinClient = devin ?? makeDevinClient(config);
   app.use(express.json({ limit: '1mb' }));
   app.use(createSessionMiddleware(config));
   registerAuthRoutes(app, db);
@@ -37,6 +46,7 @@ export function createApp({ db, config, connector }: AppDependencies): express.E
   registerCatalogRoutes(app, db);
   registerRequestRoutes(app, db, data);
   registerRuntimeRoutes(app, db, data);
+  registerApprovalRoutes(app, { db, connector: data, devin: devinClient, config });
   app.get('/api/me', requireUser(db), (req, res) => {
     const { id, name, role, team } = req.user!;
     res.json({ id, name, role, team });
@@ -50,7 +60,9 @@ export async function startServer(): Promise<void> {
   fs.mkdirSync(path.dirname(dbPath), { recursive: true });
   const db = openDb(dbPath);
   seedDemo(db);
-  const app = createApp({ db, config });
+  const devin = makeDevinClient(config);
+  const app = createApp({ db, config, devin });
+  startPoller(db, devin, config.DEVIN_MOCK === '1' ? 3000 : 15000);
 
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
