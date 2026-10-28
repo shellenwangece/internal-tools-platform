@@ -71,6 +71,13 @@ Log in by picking a demo user on the start page:
 8. **Use (Sam):** the app is in Sam's catalog. Lena (Risk team) does not see it.
 9. **Governance (Ava):** *Audit log* → filter, export CSV, *Verify integrity*. *Admin* manages datasets and external apps, and can unpublish.
 
+## Known limitations (demo v1)
+
+- Data access is per dataset: anyone allowed to use an app sees the whole dataset it was granted. No row-level filtering or PII masking yet.
+- Previews use the same datasets as live apps, so an approver who clicks an action in a preview really changes that row (it is audited as `mode: preview`).
+- Built apps, previews and data live in the local SQLite file (`DATABASE_PATH`) and `var/bundles`. A fresh clone starts without the prebuilt KYC app; build it once through the normal request flow.
+- Data sources are CSV files behind `DataConnector`; MCP connectors are future work.
+
 ## Development
 
 ```bash
