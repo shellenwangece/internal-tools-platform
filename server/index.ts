@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { createServer as createViteServer } from 'vite';
+import { registerAuditRoutes } from '../routes/audit.js';
 import { registerAuthRoutes } from '../routes/auth.js';
 import { createSessionMiddleware, requireUser } from './auth.js';
 import { loadConfig, type Config } from './config.js';
@@ -23,6 +24,7 @@ export function createApp({ db, config }: AppDependencies): express.Express {
   app.use(express.json({ limit: '1mb' }));
   app.use(createSessionMiddleware(config));
   registerAuthRoutes(app, db);
+  registerAuditRoutes(app, db);
   app.get('/api/me', requireUser(db), (req, res) => {
     const { id, name, role, team } = req.user!;
     res.json({ id, name, role, team });

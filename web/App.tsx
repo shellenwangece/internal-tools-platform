@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { AuditLog } from './pages/AuditLog.js';
 
 interface DemoUser {
   id: string;
@@ -8,6 +9,8 @@ interface DemoUser {
 }
 
 export function App() {
+  if (window.location.pathname === '/audit') return <AuditLog />;
+
   const [users, setUsers] = useState<DemoUser[]>([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
@@ -30,7 +33,7 @@ export function App() {
       body: JSON.stringify({ userId }),
     });
     if (response.ok) {
-      window.location.assign('/catalog');
+      window.location.assign(userId === 'ava' ? '/audit' : '/catalog');
       return;
     }
     const result = (await response.json()) as { error?: string };
