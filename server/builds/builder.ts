@@ -4,6 +4,8 @@ import os from 'node:os';
 import path from 'node:path';
 import { promisify } from 'node:util';
 
+import { gitAuthEnv, redact } from '../github/gitAuth.js';
+
 const run = promisify(execFile);
 
 export interface Builder {
@@ -18,13 +20,17 @@ export function cleanBuildEnv(): NodeJS.ProcessEnv {
 }
 
 async function cloneAt(repo: string, sha: string, token: string, dest: string): Promise<void> {
-  const authHeader = `AUTHORIZATION: basic ${Buffer.from(`x-access-token:${token}`).toString('base64')}`;
-  const git = (...args: string[]) => run('git', ['-c', `http.extraheader=${authHeader}`, ...args], { env: cleanBuildEnv(), cwd: dest, timeout: 120000 });
+  const env = gitAuthEnv(token);
+  const git = (...args: string[]) => run('git', args, { env, cwd: dest, timeout: 120000 });
   fs.mkdirSync(dest, { recursive: true });
-  await git('init', '-q');
-  await git('remote', 'add', 'origin', `https://github.com/${repo}.git`);
-  await git('fetch', '-q', '--depth', '1', 'origin', sha);
-  await git('checkout', '-q', 'FETCH_HEAD');
+  try {
+    await git('init', '-q');
+    await git('remote', 'add', 'origin', `https://github.com/${repo}.git`);
+    await git('fetch', '-q', '--depth', '1', 'origin', sha);
+    await git('checkout', '-q', 'FETCH_HEAD');
+  } catch (e) {
+    throw new Error(redact(`Could not fetch ${repo}@${sha.slice(0, 7)}: ${e instanceof Error ? (e as { stderr?: string }).stderr || e.message : String(e)}`, token));
+  }
 }
 
 export class RepoBuilder implements Builder {

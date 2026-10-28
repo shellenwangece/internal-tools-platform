@@ -10,7 +10,9 @@
     "typecheck": "tsc --noEmit -p .",
     "test": "vitest run",
     "devin:setup": "tsx scripts/devin-setup.ts",
-    "data:generate": "tsx scripts/generate-data.ts && tsx scripts/sync-template-mock.ts"
+    "data:generate": "tsx scripts/generate-data.ts && tsx scripts/sync-template-mock.ts",
+    "template:publish": "tsx scripts/publish-template.ts",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "better-sqlite3": "11.10.0",
