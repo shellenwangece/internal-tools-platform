@@ -38,6 +38,9 @@ test('request → approve → Devin build → preview → merge → publish → 
   await loginAs(page, 'Sam Okafor');
   await page.locator('a.app-card:not(.external)', { hasText: 'Refunds Dashboard' }).click();
   await expect(page.frameLocator('iframe.app-frame').locator('#out')).toContainText('Hello Sam Okafor. Refunds: 150 rows');
+  // A direct load of an app page (refresh, shared link) must reach the SPA, not the bundle routes.
+  await page.reload();
+  await expect(page.frameLocator('iframe.app-frame').locator('#out')).toContainText('Hello Sam Okafor. Refunds: 150 rows');
 
   await loginAs(page, 'Lena Park');
   await expect(page.locator('a.app-card:not(.external)', { hasText: 'Refunds Dashboard' })).toHaveCount(0);

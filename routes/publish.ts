@@ -58,6 +58,7 @@ export function registerPublishRoutes(app: Express, deps: PublishDeps): void {
     serve(deps.bundles.dir(r.slug, r.previewSha))(req, res, next);
   });
 
-  app.use('/apps', (_req, res) => { res.status(404).send('Not found'); });
+  // Other /apps/:slug paths are platform pages, handled by the SPA.
+  app.use('/apps/:slug/preview', (_req, res) => { res.status(404).send('Not found'); });
   void path;
 }

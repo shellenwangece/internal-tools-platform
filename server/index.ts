@@ -86,7 +86,8 @@ export async function startServer(): Promise<void> {
   if (process.env.NODE_ENV !== 'production') {
     const vite = await createViteServer({
       configFile: path.resolve('vite.config.ts'),
-      server: { middlewareMode: true },
+      // Built app bundles and the template are written at runtime; they must not reload the platform page.
+      server: { middlewareMode: true, watch: { ignored: ['**/var/**', '**/template/**'] } },
       appType: 'spa',
     });
     app.use(vite.middlewares);
