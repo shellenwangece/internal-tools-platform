@@ -11,6 +11,10 @@ import { registerCatalogRoutes } from '../routes/catalog.js';
 import { registerRequestRoutes } from '../routes/requests.js';
 import { registerRuntimeRoutes } from '../routes/runtime.js';
 import { registerApprovalRoutes } from '../routes/approvals.js';
+import { registerPublishRoutes } from '../routes/publish.js';
+import { FakeBuilder, RepoBuilder, type Builder } from './builds/builder.js';
+import { BundleStore } from './builds/store.js';
+import { FakeGitHubClient, HttpGitHubClient, type GitHubClient } from './github/client.js';
 import { FakeDevinClient, HttpDevinClient, type DevinClient } from './devin/client.js';
 import { startPoller } from './devin/poller.js';
 import { CsvConnector } from './data/csvConnector.js';
@@ -24,8 +28,9 @@ export interface AppDependencies {
   config: Config;
   connector?: CsvConnector;
   devin?: DevinClient;
-  github?: unknown;
-  builder?: unknown;
+  github?: GitHubClient;
+  builder?: Builder;
+  bundles?: BundleStore;
 }
 
 export function makeDevinClient(config: Config): DevinClient {
@@ -33,7 +38,17 @@ export function makeDevinClient(config: Config): DevinClient {
   return new HttpDevinClient(config.DEVIN_API_KEY, config.DEVIN_ORG_ID);
 }
 
-export function createApp({ db, config, connector, devin }: AppDependencies): express.Express {
+export function makeGitHubClient(config: Config): GitHubClient {
+  if (config.GITHUB_MOCK === '1' || !config.GITHUB_TOKEN) return new FakeGitHubClient();
+  return new HttpGitHubClient(config.GITHUB_TOKEN);
+}
+
+export function makeBuilder(config: Config): Builder {
+  if (config.GITHUB_MOCK === '1') return new FakeBuilder();
+  return new RepoBuilder({ token: config.GITHUB_TOKEN ?? '', mode: config.BUILD_MODE });
+}
+
+export function createApp({ db, config, connector, devin, github, builder, bundles }: AppDependencies): express.Express {
   const app = express();
   const data = connector ?? new CsvConnector(db, path.resolve('data'));
   data.loadIfEmpty();
@@ -47,6 +62,7 @@ export function createApp({ db, config, connector, devin }: AppDependencies): ex
   registerRequestRoutes(app, db, data);
   registerRuntimeRoutes(app, db, data);
   registerApprovalRoutes(app, { db, connector: data, devin: devinClient, config });
+  registerPublishRoutes(app, { db, github: github ?? makeGitHubClient(config), builder: builder ?? makeBuilder(config), bundles: bundles ?? new BundleStore(path.resolve('var/bundles')) });
   app.get('/api/me', requireUser(db), (req, res) => {
     const { id, name, role, team } = req.user!;
     res.json({ id, name, role, team });
