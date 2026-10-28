@@ -9,6 +9,7 @@ import { registerAuthRoutes } from '../routes/auth.js';
 import { registerDatasetRoutes } from '../routes/datasets.js';
 import { registerCatalogRoutes } from '../routes/catalog.js';
 import { registerRequestRoutes } from '../routes/requests.js';
+import { registerRuntimeRoutes } from '../routes/runtime.js';
 import { CsvConnector } from './data/csvConnector.js';
 import { createSessionMiddleware, requireUser } from './auth.js';
 import { loadConfig, type Config } from './config.js';
@@ -35,6 +36,7 @@ export function createApp({ db, config, connector }: AppDependencies): express.E
   registerDatasetRoutes(app, db, data);
   registerCatalogRoutes(app, db);
   registerRequestRoutes(app, db, data);
+  registerRuntimeRoutes(app, db, data);
   app.get('/api/me', requireUser(db), (req, res) => {
     const { id, name, role, team } = req.user!;
     res.json({ id, name, role, team });
