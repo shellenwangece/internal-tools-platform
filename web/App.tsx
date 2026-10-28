@@ -1,5 +1,14 @@
 import { useEffect, useState } from 'react';
+import { BrowserRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import type { Me } from './api.js';
+import { Layout } from './components/Layout.js';
+import { Admin } from './pages/Admin.js';
+import { AppView } from './pages/AppView.js';
 import { AuditLog } from './pages/AuditLog.js';
+import { Catalog } from './pages/Catalog.js';
+import { RequestApp } from './pages/RequestApp.js';
+import { RequestDetail } from './pages/RequestDetail.js';
+import { Requests } from './pages/Requests.js';
 
 interface DemoUser {
   id: string;
@@ -8,8 +17,7 @@ interface DemoUser {
   team: string;
 }
 
-export function App() {
-  if (window.location.pathname === '/audit') return <AuditLog />;
+export function Login({ onLogin }: { onLogin: () => void }) {
 
   const [users, setUsers] = useState<DemoUser[]>([]);
   const [error, setError] = useState('');
@@ -32,10 +40,7 @@ export function App() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId }),
     });
-    if (response.ok) {
-      window.location.assign(userId === 'ava' ? '/audit' : '/catalog');
-      return;
-    }
+    if (response.ok) { onLogin(); return; }
     const result = (await response.json()) as { error?: string };
     setError(result.error ?? 'Could not log in. Please try again.');
   }
@@ -68,4 +73,31 @@ export function App() {
       </section>
     </main>
   );
+}
+
+function Routed() {
+  const [me, setMe] = useState<Me | null | undefined>(undefined);
+  const nav = useNavigate();
+  const refresh = () => fetch('/api/me').then(async (r) => setMe(r.ok ? ((await r.json()) as Me) : null));
+  useEffect(() => { void refresh(); }, []);
+  if (me === undefined) return <p className="muted center">Loading…</p>;
+  if (!me) return <Login onLogin={() => { void refresh().then(() => nav('/catalog')); }} />;
+  return (
+    <Routes>
+      <Route element={<Layout me={me} />}>
+        <Route path="/catalog" element={<Catalog me={me} />} />
+        <Route path="/apps/:slug" element={<AppView />} />
+        <Route path="/requests" element={<Requests me={me} />} />
+        <Route path="/requests/new" element={<RequestApp />} />
+        <Route path="/requests/:id" element={<RequestDetail me={me} />} />
+        <Route path="/admin" element={<Admin me={me} />} />
+        <Route path="/audit" element={<AuditLog />} />
+        <Route path="*" element={<Navigate to="/catalog" replace />} />
+      </Route>
+    </Routes>
+  );
+}
+
+export function App() {
+  return <BrowserRouter><Routed /></BrowserRouter>;
 }

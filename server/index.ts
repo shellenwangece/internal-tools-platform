@@ -12,6 +12,7 @@ import { registerRequestRoutes } from '../routes/requests.js';
 import { registerRuntimeRoutes } from '../routes/runtime.js';
 import { registerApprovalRoutes } from '../routes/approvals.js';
 import { registerPublishRoutes } from '../routes/publish.js';
+import { registerAdminRoutes } from '../routes/admin.js';
 import { FakeBuilder, RepoBuilder, type Builder } from './builds/builder.js';
 import { BundleStore } from './builds/store.js';
 import { FakeGitHubClient, HttpGitHubClient, type GitHubClient } from './github/client.js';
@@ -59,6 +60,7 @@ export function createApp({ db, config, connector, devin, github, builder, bundl
   registerAuditRoutes(app, db);
   registerDatasetRoutes(app, db, data);
   registerCatalogRoutes(app, db);
+  registerAdminRoutes(app, db);
   registerRequestRoutes(app, db, data);
   registerRuntimeRoutes(app, db, data);
   registerApprovalRoutes(app, { db, connector: data, devin: devinClient, config });
