@@ -133,13 +133,19 @@ Mock datasets, realistic and fake, about 50–200 rows each:
 - `customers`: customer_id, name, email, country, segment, created_at
 - `feature_flags`: flag_key, description, enabled, rollout_percent, owner_team, updated_at, updated_by
 
-### 6.4 Secrets and config
+### 6.4 Devin knowledge and "New internal app" playbook
+Rules that hold for every app build live in Devin itself, not in each prompt. That keeps the per-request prompt short, and every session (including ones engineers start by hand) follows the same rules.
+- **Knowledge** (org-level notes, `POST /v3/organizations/{org_id}/knowledge/notes`, each with a `trigger`): (1) platform overview and app contract: SDK-only data access, sandbox/CSP limits, no network/secrets; (2) the SDK API reference; (3) the template repo layout plus build and check commands; (4) UI conventions so apps look consistent; (5) the mock dataset schemas.
+- **Playbook** "New internal app" (`POST /v3/organizations/{org_id}/playbooks`, macro `!new_internal_app`, `structured_output_schema` = `{repo_url, pr_url, summary}`): the step-by-step procedure is create repo from template → implement against the requirement and approved datasets only → run checks → open PR → report structured output, never asking a human for input. Written per the Devin playbook guide (Overview, Procedure, Specifications, Advice, Forbidden actions).
+- Content is committed as Markdown in `devin/` in this repo. An idempotent `npm run devin:setup` script creates or updates the notes and playbook via the API and stores their IDs in `.env`/config. The platform passes `playbook_id` when it creates each build session, and the per-request prompt carries only the request-specific parts (requirement, slug, approved datasets and permissions).
+
+### 6.5 Secrets and config
 `.env` (gitignored; `.env.example` committed) holds `DEVIN_API_KEY` (service user token), `DEVIN_ORG_ID`, `GITHUB_TOKEN` (used by the platform only to clone app repos and read PR merge state), `GITHUB_OWNER`, `TEMPLATE_REPO`, `DEVIN_MAX_ACU`, and `SESSION_SECRET`. These are used only server-side, never sent to the browser, never logged.
 
 Devin creates the app repos through the org's GitHub integration. The platform's `GITHUB_TOKEN` is only for reading.
 
-### 6.5 Demo script the build must support
-1. Log in as Ava (Admin): catalog shows 3 "Power Apps (legacy)" external apps, plus one already-live Devin-built app (built during development, e.g. the KYC review queue).
+### 6.6 Demo script the build must support
+1. Log in as Ava (Admin): catalog shows 3 "Power Apps (legacy)" external apps, plus two already-live Devin-built apps (KYC review queue, feature-flag admin), built during development through the real request → approve → build → publish flow. The **refunds dashboard is not prebuilt**; it is generated during the demo.
 2. Log in as Priya (Requester, Compliance): request "Refunds dashboard", pick `refunds` (view) and `customers` (view), audience Support and Risk.
 3. Log in as Marco (Approver): review, approve → Devin session starts (video cuts).
 4. Status `ready_for_review`: Marco opens the PR on GitHub, previews, merges, publishes.
@@ -153,6 +159,8 @@ Devin creates the app repos through the org's GitHub integration. The platform's
 - Mock CSV data, no MCP for now; keep a connector seam for later.
 - Two approval gates: before build and before go-live.
 - Approach A.
+- Prebuild the KYC review queue and feature-flag admin through the platform; keep the refunds dashboard for the live demo.
+- Devin knowledge and a "New internal app" playbook are in scope.
 
 ## 8. Calls made by Devin (user can override)
 - Roles Requester / Approver / Admin / App user, with team-based app access.
@@ -162,7 +170,7 @@ Devin creates the app repos through the org's GitHub integration. The platform's
 - App repos are private, named `itp-app-<slug>`, under the same GitHub owner as this repo.
 - Grants are per dataset, with no row or column filtering. App users can change data through apps granted "view and change". One Approver may pass both gates.
 - Builds run in a throwaway Docker container with no platform secrets.
-- Seed the 3 Power Apps apps as external entries, and pre-build one app so the catalog isn't empty in the video.
+- Seed the 3 Power Apps apps as external entries.
 - The app template does **not** include the Superpowers plugin: its brainstorming skill waits for human answers, which would stall unattended build sessions.
 
 ## 9. Left to the builder
