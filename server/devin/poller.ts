@@ -9,7 +9,8 @@ export function applySession(db: Db, request: AppRequest, s: DevinSession): AppR
   const base = { devin_status: s.status, devin_status_detail: s.statusDetail };
   const pr = s.pullRequests[0]?.prUrl || s.structuredOutput?.pr_url || null;
   const repo = s.structuredOutput?.repo_url ?? (pr ? pr.replace(/\/pull\/\d+.*$/, '') : null);
-  const finished = s.status === 'exit' || s.statusDetail === 'finished';
+  // Real sessions often end idle in waiting_for_user once the PR is open, rather than exiting.
+  const finished = s.status === 'exit' || s.statusDetail === 'finished' || (s.statusDetail === 'waiting_for_user' && !!pr);
   if (finished && pr) {
     appendAudit(db, { actorId: null, action: 'build.ready', target: `request:${request.id}`, details: { prUrl: pr, repoUrl: repo, summary: s.structuredOutput?.summary ?? '' } });
     return updateRequest(db, request.id, { ...base, status: 'ready_for_review', pr_url: pr, repo_url: repo, failure_reason: null });

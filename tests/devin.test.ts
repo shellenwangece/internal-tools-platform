@@ -85,6 +85,7 @@ describe('gate 1 and Devin orchestration', () => {
     expect(applySession(db, getRequest(db, 9), { ...base, status: 'suspended' })).toMatchObject({ status: 'build_failed', failureReason: expect.stringContaining('budget') });
     reset();
     expect(applySession(db, getRequest(db, 9), { ...base, statusDetail: 'waiting_for_user' })).toMatchObject({ status: 'building', devinStatusDetail: 'waiting_for_user' });
+    expect(applySession(db, getRequest(db, 9), { ...base, statusDetail: 'waiting_for_user', pullRequests: [{ prUrl: 'https://github.com/o/itp-app-x/pull/1' }] as never })).toMatchObject({ status: 'ready_for_review', prUrl: 'https://github.com/o/itp-app-x/pull/1' });
   });
 
   it('HTTP client posts to the org sessions endpoint with a bearer token and omits playbook_id', async () => {
