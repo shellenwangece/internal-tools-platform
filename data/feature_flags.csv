@@ -1,0 +1,26 @@
+flag_key,description,enabled,rollout_percent,owner_team,updated_at,updated_by
+new_onboarding_flow,Controls the new onboarding flow feature.,true,100,Engineering,2026-10-07T01:04:23.000Z,Lena Park
+instant_refunds,Controls the instant refunds feature.,true,50,Risk,2026-08-05T02:45:18.000Z,Lena Park
+kyc_auto_approve_low_risk,Controls the kyc auto approve low risk feature.,true,25,Compliance,2026-10-22T04:03:18.000Z,Marco Rossi
+dark_mode,Controls the dark mode feature.,false,5,Engineering,2026-08-19T01:15:48.000Z,Marco Rossi
+card_controls_v2,Controls the card controls v2 feature.,true,0,Engineering,2026-10-16T18:12:30.000Z,Marco Rossi
+savings_pots,Controls the savings pots feature.,false,50,Support,2026-07-20T03:06:59.000Z,Marco Rossi
+fx_fee_waiver,Controls the fx fee waiver feature.,false,10,Compliance,2026-09-27T17:35:26.000Z,Marco Rossi
+merchant_insights,Controls the merchant insights feature.,true,50,Risk,2026-07-27T22:43:36.000Z,Marco Rossi
+open_banking_sync,Controls the open banking sync feature.,false,5,Support,2026-09-14T10:16:44.000Z,Marco Rossi
+biometric_login,Controls the biometric login feature.,false,50,Compliance,2026-10-11T11:03:05.000Z,Ava Chen
+bill_split,Controls the bill split feature.,false,10,Engineering,2026-10-12T00:55:27.000Z,Lena Park
+virtual_cards,Controls the virtual cards feature.,false,100,Support,2026-09-22T00:32:09.000Z,Ava Chen
+statement_export_v2,Controls the statement export v2 feature.,false,5,Support,2026-09-17T08:08:33.000Z,Ava Chen
+chat_support_beta,Controls the chat support beta feature.,true,100,Support,2026-08-01T19:06:10.000Z,Marco Rossi
+crypto_tab,Controls the crypto tab feature.,true,0,Support,2026-10-02T20:45:41.000Z,Marco Rossi
+spend_limits,Controls the spend limits feature.,true,0,Compliance,2026-09-06T00:08:57.000Z,Ava Chen
+push_receipts,Controls the push receipts feature.,true,50,Support,2026-10-01T04:08:50.000Z,Ava Chen
+referral_program,Controls the referral program feature.,true,100,Risk,2026-09-07T08:44:52.000Z,Lena Park
+joint_accounts,Controls the joint accounts feature.,false,100,Compliance,2026-09-30T01:06:00.000Z,Marco Rossi
+subscription_tracker,Controls the subscription tracker feature.,true,50,Risk,2026-09-15T16:26:26.000Z,Marco Rossi
+atm_locator,Controls the atm locator feature.,true,50,Support,2026-07-02T12:25:56.000Z,Marco Rossi
+travel_mode,Controls the travel mode feature.,true,50,Support,2026-10-21T17:43:15.000Z,Marco Rossi
+cashback_boost,Controls the cashback boost feature.,true,100,Support,2026-08-15T04:55:20.000Z,Marco Rossi
+budget_alerts,Controls the budget alerts feature.,false,25,Risk,2026-07-03T08:11:19.000Z,Lena Park
+tax_summary,Controls the tax summary feature.,true,50,Support,2026-07-07T16:35:49.000Z,Ava Chen

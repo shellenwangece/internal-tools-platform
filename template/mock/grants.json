@@ -1,0 +1,10 @@
+[
+ {
+  "dataset": "kyc_cases",
+  "permission": "write"
+ },
+ {
+  "dataset": "customers",
+  "permission": "read"
+ }
+]
