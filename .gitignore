@@ -1,0 +1,10 @@
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+var/
+playwright-report/
+test-results/
+.devin-resources.json
+.superpowers/
