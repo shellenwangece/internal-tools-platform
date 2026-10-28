@@ -22,6 +22,7 @@ This repo is a **working demo** of that replacement: a self-hosted internal tool
 
 **Non-goals (this demo)**
 - MCP or real data connectors. The interface exists, and the only implementation is CSV.
+- Row-level or column-level data restrictions. Grants are per app, per dataset (view, or view and change), and apply to everyone allowed to use the app. Row filters and PII masking are a later addition at the connector layer.
 - Real SSO. Demo login with seeded users; the auth layer is shaped so OIDC can replace it.
 - Custom server code per app (apps are front-end only; see Approaches).
 - Production hosting, HA, multi-tenancy, scaling.
@@ -43,7 +44,7 @@ Each user has one **role** and one **team** (Compliance, Support, Risk, Engineer
 | Requester | Submit app requests, see their own requests' status, use apps their team may access |
 | Approver | Everything a Requester can, plus approve/reject requests (gate 1) and approve/publish builds (gate 2). Cannot approve a request they submitted. |
 | Admin | Manage users and roles, register external apps, manage datasets, view and export the full audit log, unpublish apps |
-| App user | Use published apps their team may access (read-only role otherwise) |
+| App user | Use published apps their team may access, including changing data through an app granted "view and change" (e.g. resolving a KYC case). No platform actions beyond that. |
 
 Seeded demo users (one per role, login by picking a user on the login screen): e.g. Priya (Requester, Compliance), Marco (Approver, Engineering), Ava (Admin, Engineering), Sam (App user, Support).
 
@@ -77,6 +78,10 @@ The platform polls `GET /v3/organizations/{org_id}/sessions/{devin_id}` (every ~
 The Approver sees the PR link and a **Preview**. The platform clones the PR head commit, builds it, and serves it in the same sandbox as live apps, against the same datasets, with writes allowed. The code review happens on GitHub: the Approver merges the PR there. In the platform they click **Publish**. The platform then builds the latest `main` commit, records that commit SHA as the published version, and the app appears in the catalog for the approved teams. Status: `live`. Publish is blocked if the PR isn't merged. The requester cannot do gate 2 on their own request.
 
 Admins can **unpublish**, which hides the app and stops serving it.
+
+The same Approver may pass both gates on one request. Only the requester is excluded from both.
+
+**Build isolation:** app code is untrusted, and so are its dependency install scripts. Preview and publish builds run in a throwaway Docker container (`node` image, repo mounted, no platform secrets in the environment, network allowed only for the package install, CPU/memory/time limits). If Docker isn't available, fall back to a subprocess in a temp directory with an empty environment apart from `PATH`/`HOME`, and log a warning. Only the build output (`dist/`) is copied back and served.
 
 ### 4.6 Use an app
 The catalog shows the apps the user's team may access. Opening one renders it in the platform shell (header, app name, "Built by Devin · version abc1234"). All of its data access goes through the platform.
@@ -155,6 +160,8 @@ Devin creates the app repos through the org's GitHub integration. The platform's
 - Iframe sandbox + postMessage SDK + CSP as the security boundary.
 - Code review happens on GitHub (merge PR); publish happens in the platform and is pinned to a commit SHA.
 - App repos are private, named `itp-app-<slug>`, under the same GitHub owner as this repo.
+- Grants are per dataset, with no row or column filtering. App users can change data through apps granted "view and change". One Approver may pass both gates.
+- Builds run in a throwaway Docker container with no platform secrets.
 - Seed the 3 Power Apps apps as external entries, and pre-build one app so the catalog isn't empty in the video.
 - The app template does **not** include the Superpowers plugin: its brainstorming skill waits for human answers, which would stall unattended build sessions.
 
