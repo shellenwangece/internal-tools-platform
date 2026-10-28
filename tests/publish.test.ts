@@ -4,7 +4,8 @@ import path from 'node:path';
 import request from 'supertest';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { cleanBuildEnv, FakeBuilder } from '../server/builds/builder.js';
-import { BUNDLE_CSP, BundleStore } from '../server/builds/store.js';
+import { createHash } from 'node:crypto';
+import { BUNDLE_CSP, BundleStore, inlineDocument } from '../server/builds/store.js';
 import { loadConfig } from '../server/config.js';
 import { openDb } from '../server/db.js';
 import { FakeGitHubClient } from '../server/github/client.js';
@@ -22,6 +23,21 @@ describe('preview, publish, unpublish', () => {
   });
   afterEach(() => { db.close(); fs.rmSync(tmp, { recursive: true, force: true }); });
 
+  it('inlines the bundle scripts and styles into the document and allows them by hash', () => {
+    const dir = path.join(tmp, 'doc'); fs.mkdirSync(path.join(dir, 'assets'), { recursive: true });
+    fs.writeFileSync(path.join(tmp, 'secret.js'), 'SECRET');
+    fs.writeFileSync(path.join(dir, 'assets/a.js'), 'console.log("</script>")');
+    fs.writeFileSync(path.join(dir, 'assets/a.css'), 'body{color:red}');
+    fs.writeFileSync(path.join(dir, 'index.html'), '<script type="module" crossorigin src="./assets/a.js"></script><script src="../secret.js"></script><link rel="stylesheet" crossorigin href="./assets/a.css">');
+    const { html, csp } = inlineDocument(dir);
+    const body = 'console.log("<\\/script>")';
+    expect(html).toContain(`<script type="module">${body}</script>`);
+    expect(html).toContain('<style>body{color:red}</style>');
+    expect(html).toContain('src="../secret.js"');
+    expect(html).not.toContain('SECRET');
+    expect(csp).toBe(BUNDLE_CSP.replace("script-src 'self'", `script-src 'self' 'sha256-${createHash('sha256').update(body).digest('base64')}'`));
+  });
+
   it('preview builds the PR head and serves it with the sandbox CSP; publish needs a merged PR and uses main', async () => {
     const marco = await as('marco');
     expect((await (await as('priya')).post('/api/requests/5/preview')).status).toBe(403);
@@ -30,7 +46,7 @@ describe('preview, publish, unpublish', () => {
     expect(prev.body.request.previewSha).toBe('a'.repeat(40));
     const page = await marco.get('/apps/refunds-dashboard/preview/5/');
     expect(page.status).toBe(200);
-    expect(page.headers['content-security-policy']).toBe(BUNDLE_CSP);
+    expect(page.headers['content-security-policy']).toContain("connect-src 'none'");
     expect(page.text).toContain('Mock app itp-app-refunds-dashboard');
     expect((await (await as('sam')).get('/apps/refunds-dashboard/preview/5/')).status).toBe(403);
 

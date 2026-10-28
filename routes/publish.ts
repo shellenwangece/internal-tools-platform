@@ -2,7 +2,7 @@ import express, { type Express } from 'express';
 import path from 'node:path';
 import { getAppBySlug } from '../server/apps.js';
 import { requireRole, requireUser } from '../server/auth.js';
-import { BUNDLE_CSP } from '../server/builds/store.js';
+import { BUNDLE_CSP, inlineDocument } from '../server/builds/store.js';
 import { FakeGitHubClient } from '../server/github/client.js';
 import { previewBuild, publishApp, unpublishApp, type PublishDeps } from '../server/requests/publish.js';
 import { getRequest } from '../server/requests/service.js';
@@ -29,7 +29,15 @@ export function registerPublishRoutes(app: Express, deps: PublishDeps): void {
     });
   }
 
-  const serve = (dir: string) => express.static(dir, { index: 'index.html', fallthrough: false, setHeaders: (r) => { r.setHeader('Content-Security-Policy', BUNDLE_CSP); r.setHeader('X-Frame-Options', 'SAMEORIGIN'); r.setHeader('Cache-Control', 'no-store'); } });
+  const staticFiles = (dir: string) => express.static(dir, { index: 'index.html', fallthrough: false, setHeaders: (r) => { r.setHeader('Content-Security-Policy', BUNDLE_CSP); r.setHeader('X-Frame-Options', 'SAMEORIGIN'); r.setHeader('Cache-Control', 'no-store'); } });
+  const serve = (dir: string): express.RequestHandler => (req, res, next) => {
+    if (!isDocument(req)) { staticFiles(dir)(req, res, next); return; }
+    const doc = inlineDocument(dir);
+    res.setHeader('Content-Security-Policy', doc.csp);
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    res.setHeader('Cache-Control', 'no-store');
+    res.type('html').send(doc.html);
+  };
 
   // A sandboxed iframe has an opaque origin, so the browser sends no session cookie for its
   // script/style requests. Only the HTML document needs a login; static assets carry no data
