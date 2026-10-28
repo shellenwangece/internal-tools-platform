@@ -100,3 +100,29 @@ describe('gate 1 and Devin orchestration', () => {
     expect(s.pullRequests).toEqual([{ prUrl: 'https://github.com/o/r/pull/2', prState: 'open' }]);
   });
 });
+
+describe('gate 1 creates the app repo before starting Devin', () => {
+  it('creates itp-app-<slug> from the template once and records it', async () => {
+    const { FakeGitHubClient } = await import('../server/github/client.js');
+    const { openDb } = await import('../server/db.js');
+    const { seedDemo } = await import('../server/seed.js');
+    const { loadConfig } = await import('../server/config.js');
+    const { createApp } = await import('../server/index.js');
+    const { default: request } = await import('supertest');
+    const db = openDb(':memory:'); seedDemo(db);
+    const gh = new FakeGitHubClient();
+    const app = createApp({ db, config: loadConfig({ SESSION_SECRET: 's', DEVIN_MOCK: '1', GITHUB_MOCK: '1' }), github: gh });
+    const priya = request.agent(app); await priya.post('/api/auth/login').send({ userId: 'priya' });
+    const sub = await priya.post('/api/requests').send({ name: 'Refunds Dashboard', description: 'Support needs to see pending refunds and approve them.', teams: ['Support'], grants: [{ dataset: 'refunds', permission: 'read' }] });
+    const marco = request.agent(app); await marco.post('/api/auth/login').send({ userId: 'marco' });
+    const ok = await marco.post(`/api/requests/${sub.body.request.id}/approve`).send({});
+    expect(ok.body.request.status).toBe('building');
+    expect(ok.body.request.repoUrl).toBe('https://github.com/shellenwangece/itp-app-refunds-dashboard');
+    expect(gh.created).toEqual(['shellenwangece/itp-app-refunds-dashboard']);
+    const ava = request.agent(app); await ava.post('/api/auth/login').send({ userId: 'ava' });
+    const actions = (await ava.get('/api/audit')).body.map((e: { action: string }) => e.action);
+    expect(actions).toContain('github.repo_created');
+    expect(actions).toContain('devin.session_started');
+    db.close();
+  });
+});

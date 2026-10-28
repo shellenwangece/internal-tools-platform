@@ -3,6 +3,8 @@ export interface PrInfo { merged: boolean; headSha: string; state: string; baseR
 export interface GitHubClient {
   getPr(prUrl: string): Promise<PrInfo>;
   getBranchHeadSha(repo: string, branch: string): Promise<string>;
+  /** Creates a private repo from the template; resolves (created=false) if it already exists. */
+  createRepoFromTemplate(template: string, repo: string, description: string): Promise<{ url: string; created: boolean }>;
 }
 
 export function parsePrUrl(prUrl: string): { repo: string; number: number } {
@@ -31,6 +33,17 @@ export class HttpGitHubClient implements GitHubClient {
     const d = await this.get(`/repos/${repo}/branches/${encodeURIComponent(branch)}`);
     return (d.commit as { sha: string }).sha;
   }
+
+  async createRepoFromTemplate(template: string, repo: string, description: string): Promise<{ url: string; created: boolean }> {
+    const [owner, name] = repo.split('/');
+    const res = await this.fetchFn(`${this.baseUrl}/repos/${template}/generate`, { method: 'POST', headers: { Authorization: `Bearer ${this.token}`, Accept: 'application/vnd.github+json', 'User-Agent': 'internal-tools-platform', 'Content-Type': 'application/json' }, body: JSON.stringify({ owner, name, private: true, description: description.slice(0, 300) }) });
+    if (res.status === 201) return { url: `https://github.com/${repo}`, created: true };
+    if (res.status === 422) {
+      const check = await this.fetchFn(`${this.baseUrl}/repos/${repo}`, { headers: { Authorization: `Bearer ${this.token}`, Accept: 'application/vnd.github+json', 'User-Agent': 'internal-tools-platform' } });
+      if (check.ok) return { url: `https://github.com/${repo}`, created: false };
+    }
+    throw new Error(`GitHub could not create ${repo} from ${template}: ${res.status}`);
+  }
 }
 
 /** GITHUB_MOCK=1: PRs are open until `merge()` is called; main advances to a new sha on merge. */
@@ -46,6 +59,14 @@ export class FakeGitHubClient implements GitHubClient {
 
   async getBranchHeadSha(repo: string, _branch: string): Promise<string> {
     return this.mains.get(repo) ?? '0'.repeat(40);
+  }
+
+  readonly created: string[] = [];
+
+  async createRepoFromTemplate(_template: string, repo: string): Promise<{ url: string; created: boolean }> {
+    const created = !this.created.includes(repo);
+    if (created) this.created.push(repo);
+    return { url: `https://github.com/${repo}`, created };
   }
 
   merge(prUrl: string): void {

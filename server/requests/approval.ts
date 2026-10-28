@@ -2,12 +2,13 @@ import { appendAudit } from '../audit.js';
 import type { User } from '../auth.js';
 import type { Config } from '../config.js';
 import type { DataConnector } from '../data/connector.js';
+import type { GitHubClient } from '../github/client.js';
 import type { Db } from '../db.js';
 import type { DevinClient } from '../devin/client.js';
 import { buildPrompt } from '../devin/prompt.js';
 import { getRequest, normalizeGrants, RequestError, updateRequest, type AppRequest, type Grant } from './service.js';
 
-export interface ApprovalDeps { db: Db; connector: DataConnector; devin: DevinClient; config: Config }
+export interface ApprovalDeps { db: Db; connector: DataConnector; devin: DevinClient; config: Config; github?: GitHubClient }
 
 function assertApprover(request: AppRequest, user: User): void {
   if (user.role !== 'approver' && user.role !== 'admin') throw new RequestError(403, 'Only approvers can review requests');
@@ -27,7 +28,13 @@ export function narrowGrants(requested: Grant[], approved: Grant[]): Grant[] {
 
 export async function startBuild(deps: ApprovalDeps, request: AppRequest, actorId: string): Promise<AppRequest> {
   const prompt = buildPrompt(request, deps.connector, deps.config);
+  const targetRepo = `${deps.config.GITHUB_OWNER}/itp-app-${request.slug}`;
   try {
+    if (deps.github) {
+      const repo = await deps.github.createRepoFromTemplate(deps.config.TEMPLATE_REPO, targetRepo, `${request.name} (Internal Tools Platform app)`);
+      if (repo.created) appendAudit(deps.db, { actorId, action: 'github.repo_created', target: `request:${request.id}`, details: { repo: targetRepo, template: deps.config.TEMPLATE_REPO } });
+      updateRequest(deps.db, request.id, { repo_url: repo.url });
+    }
     const { sessionId, url } = await deps.devin.createSession({
       prompt,
       title: `ITP build: ${request.name}`,

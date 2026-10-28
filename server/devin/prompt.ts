@@ -11,6 +11,7 @@ export function buildPrompt(request: AppRequest, connector: DataConnector, confi
   lines.push(`slug: ${request.slug}`);
   lines.push(`target_repo: ${config.GITHUB_OWNER}/itp-app-${request.slug}`);
   lines.push(`template_repo: ${config.TEMPLATE_REPO}`);
+  lines.push('target_repo_status: already created from the template by the platform (private); clone it and work on a branch');
   lines.push(`audience_teams: [${request.teams.join(', ')}]`);
   lines.push('grants:');
   for (const g of request.grants) lines.push(`  - { dataset: ${g.dataset}, permission: ${g.permission} }`);

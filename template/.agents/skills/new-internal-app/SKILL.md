@@ -10,7 +10,7 @@ The session prompt contains a YAML block with: `app_name`, `slug`, `target_repo`
 
 ## Procedure
 1. Parse the YAML block. Treat `requirement` as the product brief and `grants` as hard limits.
-2. Create the repo from the template: `gh repo create <target_repo> --private --template <template_repo> --clone`. If it already exists and is empty or template-only, reuse it; if it has unrelated code, stop and report it in structured output.
+2. The platform has already created `target_repo` (private) from the template. Clone it with `git clone https://github.com/<target_repo>.git` and create a branch `devin/build-<slug>`. Only if it does not exist, create it with `gh repo create <target_repo> --private --template <template_repo> --clone`. If it has unrelated code, stop and report it in structured output.
 3. Create a branch `feature/initial-app`.
 4. Update `mock/grants.json` to match `grants` exactly, and make sure `mock/` has data for every granted dataset.
 5. Design the smallest app that fully covers the requirement: main view(s), summary stats, and the edit actions the grants allow. Follow the ITP knowledge notes (app contract, SDK reference, UI conventions).

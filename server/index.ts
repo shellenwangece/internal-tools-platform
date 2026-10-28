@@ -63,8 +63,9 @@ export function createApp({ db, config, connector, devin, github, builder, bundl
   registerAdminRoutes(app, db);
   registerRequestRoutes(app, db, data);
   registerRuntimeRoutes(app, db, data);
-  registerApprovalRoutes(app, { db, connector: data, devin: devinClient, config });
-  registerPublishRoutes(app, { db, github: github ?? makeGitHubClient(config), builder: builder ?? makeBuilder(config), bundles: bundles ?? new BundleStore(path.resolve('var/bundles')) });
+  const gh = github ?? makeGitHubClient(config);
+  registerApprovalRoutes(app, { db, connector: data, devin: devinClient, config, github: gh });
+  registerPublishRoutes(app, { db, github: gh, builder: builder ?? makeBuilder(config), bundles: bundles ?? new BundleStore(path.resolve('var/bundles')) });
   app.get('/api/me', requireUser(db), (req, res) => {
     const { id, name, role, team } = req.user!;
     res.json({ id, name, role, team });
